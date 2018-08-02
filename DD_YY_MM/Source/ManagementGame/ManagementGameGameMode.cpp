@@ -11,9 +11,13 @@ AManagementGameGameMode::AManagementGameGameMode()
 	PlayerControllerClass = AManagementGamePlayerController::StaticClass();
 
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDownCPP/Blueprints/TopDownCharacter"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Due_Date/Blueprints/Player/MyManagementGameCharacter_BP"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Default Class Set Successfully."));
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Player Default Class Not Set Successfully."));
 	}
 }
