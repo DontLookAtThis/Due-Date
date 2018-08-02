@@ -25,11 +25,18 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	// Trigger volume pointer
+private:
+	// Pointer to the trigger volume that will destroy the parcel upon overlap
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate;
 
-	// Actor pointer to hold the actor which will interact with the trigger volume
-	AActor* ActorThatTriggers; 
-	
+	// Actor pointer to the blueprint of the parcel
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ParcelBlueprint;
+
+	// Array to contain the instances of the blueprint found in the scene
+	TArray<AActor*> FoundActors;	
+
+	// Pointer to world
+	UWorld* WorldPointer;
 };
