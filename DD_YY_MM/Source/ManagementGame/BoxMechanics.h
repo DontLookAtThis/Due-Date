@@ -19,7 +19,9 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
+	bool bStartup;
+	UStaticMeshComponent* myMesh;
+	AActor* myActor;
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
