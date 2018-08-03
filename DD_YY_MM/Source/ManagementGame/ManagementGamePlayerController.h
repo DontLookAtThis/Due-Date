@@ -17,8 +17,8 @@ public:
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
-	bool bMoveForward : false;
-	bool bMoveRight : false;
+	float fMoveForward;
+	float fMoveRight;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
@@ -43,6 +43,7 @@ protected:
 
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
+	void CardinalMovement();
 };
 
 
