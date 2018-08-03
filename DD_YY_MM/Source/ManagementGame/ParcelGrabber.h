@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Character.h"
 #include "Components/ActorComponent.h"
 #include "ParcelGrabber.generated.h"
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MANAGEMENTGAME_API UParcelGrabber : public UActorComponent
@@ -25,7 +25,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;		
 	
 private:
-	FVector m_PlayerViewPoint;
-	FRotator m_PlayerRotation;
-	float m_fReach = 100.0f; // grabber reach
+	
+	ACharacter* m_PlayerCharacter;
+	float m_fReach = 500.0f; // grabber reach
 };

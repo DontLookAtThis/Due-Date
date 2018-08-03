@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
+
 // Sets default values for this component's properties
 UParcelGrabber::UParcelGrabber()
 {
@@ -20,7 +21,7 @@ UParcelGrabber::UParcelGrabber()
 void UParcelGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
+	m_PlayerCharacter = GetWorld()->GetFirstPlayerController()->GetCharacter();
 	// ...
 	
 }
@@ -32,13 +33,16 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Get player view point this tick and log it
-	GetWorld()->GetFirstPlayerController()->GetActorEyesViewPoint(m_PlayerViewPoint, m_PlayerRotation);	
+	//GetWorld()->GetFirstPlayerController()->GetActorEyesViewPoint(m_PlayerViewPoint, m_PlayerRotation);	
+
+	FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();	
+	FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
 
 	/// Draw a red trace in the world to visualize
-	FVector LineTraceEnd = m_PlayerViewPoint + m_PlayerRotation.Vector() * m_fReach;
+	FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
 	DrawDebugLine(
 		GetWorld(),
-		m_PlayerViewPoint,
+		PlayerPosition,
 		LineTraceEnd,
 		FColor(255, 0, 0),
 		false,
@@ -54,7 +58,7 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	FHitResult LineTraceHit;
 	GetWorld()->LineTraceSingleByObjectType(
 		LineTraceHit,
-		m_PlayerViewPoint,
+		FVector(PlayerPosition.X, PlayerPosition.Y, PlayerPosition.Z - 120.0f),
 		LineTraceEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		TraceParameters
