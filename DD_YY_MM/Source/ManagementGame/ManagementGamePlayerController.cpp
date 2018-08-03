@@ -32,9 +32,14 @@ void AManagementGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AManagementGamePlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AManagementGamePlayerController::OnSetDestinationReleased);
 
+
+	InputComponent->BindAxis("MoveForward" , this, &AManagementGamePlayerController::MoveForward);
+	InputComponent->BindAxis("MoveRight" , this, &AManagementGamePlayerController::MoveRight);
+
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AManagementGamePlayerController::MoveToTouchLocation);
 	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AManagementGamePlayerController::MoveToTouchLocation);
+
 
 	InputComponent->BindAction("ResetVR", IE_Pressed, this, &AManagementGamePlayerController::OnResetVR);
 }
@@ -110,4 +115,28 @@ void AManagementGamePlayerController::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+}
+
+void AManagementGamePlayerController::MoveForward(float AxisValue)
+{
+	if (AxisValue > 0)
+	{
+		bMoveForward = true;
+	}
+	else
+	{
+		bMoveForward = false;
+	}
+}
+
+void AManagementGamePlayerController::MoveRight(float AxisValue)
+{
+	if (AxisValue > 0)
+	{
+		bMoveRight = true;
+	}
+	else
+	{
+		bMoveRight = false;
+	}
 }
