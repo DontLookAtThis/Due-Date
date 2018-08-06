@@ -2,6 +2,7 @@
 
 #include "ParcelGrabber.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
@@ -22,34 +23,73 @@ void UParcelGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	m_PlayerCharacter = GetWorld()->GetFirstPlayerController()->GetCharacter();
-	// ...
-	
+
+	// Find physics handle
+	m_PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!m_PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle ERROR : Owner = %s"), *GetOwner()->GetName());
+	}	
 }
 
+void UParcelGrabber::Grab()
+{
+	auto HitResult = GetFirstPhysicsBodyInReach();
+	auto ComponentToGrab = HitResult.GetComponent();
+	auto ActorHit = HitResult.GetActor();
+
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Grabbing parcel."));
+		m_PhysicsHandle->GrabComponent(
+			ComponentToGrab,
+			NAME_None,
+			ComponentToGrab->GetOwner()->GetActorLocation(),
+			true // allow rotation
+		);
+	}
+	
+}
 
 // Called every frame
 void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+		
+	if (m_PhysicsHandle)
+	{
+		if (m_PhysicsHandle->GrabbedComponent)
+		{
+			FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();
+			FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
+			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
 
-	// Get player view point this tick and log it
-	//GetWorld()->GetFirstPlayerController()->GetActorEyesViewPoint(m_PlayerViewPoint, m_PlayerRotation);	
+			m_PhysicsHandle->SetTargetLocation(FVector(LineTraceEnd.X, LineTraceEnd.Y, LineTraceEnd.Z + 50.0f));
+		}
+		else
+		{
+			Grab();
+		}
+	}
+}
 
-	FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();	
+FHitResult UParcelGrabber::GetFirstPhysicsBodyInReach()
+{
+	FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();
 	FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
 
 	/// Draw a red trace in the world to visualize
 	FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
-	DrawDebugLine(
-		GetWorld(),
-		PlayerPosition,
-		LineTraceEnd,
-		FColor(255, 0, 0),
-		false,
-		0.0f,
-		0.0f,
-		10.0f
-	);
+	//DrawDebugLine(
+	//	GetWorld(),
+	//	PlayerPosition,
+	//	LineTraceEnd,
+	//	FColor(255, 0, 0),
+	//	false,
+	//	0.0f,
+	//	0.0f,
+	//	10.0f
+	//);
 
 	// Setup query parameters
 	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
@@ -65,9 +105,15 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	);
 
 	// See what we hit
-	if (LineTraceHit.GetActor())
+	AActor* ActorHit = LineTraceHit.GetActor();
+	if (ActorHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s hit."), *LineTraceHit.GetActor()->GetName());
+		return LineTraceHit;
+	}	
+	else
+	{
+		return FHitResult();
 	}
 }
 
