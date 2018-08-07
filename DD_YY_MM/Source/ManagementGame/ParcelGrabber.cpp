@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "ManagementGamePlayerController.h"
+#include "Components/InputComponent.h"
 #include <iostream>
 #include <memory>
 
@@ -15,6 +16,7 @@ UParcelGrabber::UParcelGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	iGrabTimer = 0;
 	// ...
 }
 
@@ -24,19 +26,33 @@ void UParcelGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	m_PlayerCharacter = GetWorld()->GetFirstPlayerController()->GetCharacter();
-	//m_pPlayerController = Cast<ManagementGamePlayerController>(GetWorld()->GetFirstPlayerController());
+	m_pInputComp = GetOwner()->FindComponentByClass<UInputComponent>();
 	// Find physics handle
 	m_PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (!m_PhysicsHandle)
 	{
 		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle ERROR : Owner = %s"), *GetOwner()->GetName());
 	}	
+	if (m_pInputComp)
+	{
+		m_pInputComp->BindAction("Grab&Release", IE_Pressed, this, &UParcelGrabber::OnSetGrabPressed);
+		m_pInputComp->BindAction("Grab&Release", IE_Released, this, &UParcelGrabber::OnSetGrabRelease);
+	}
+}
+
+void UParcelGrabber::OnSetGrabPressed()
+{
+	bGrabbing = true;
+}
+void UParcelGrabber::OnSetGrabRelease()
+{
+
 }
 
 void UParcelGrabber::Grab()
 {
 	m_PhysicsHandle->ReleaseComponent();
-
+	
 	auto HitResult = GetFirstPhysicsBodyInReach();
 	auto ComponentToGrab = HitResult.GetComponent();
 	auto ActorHit = HitResult.GetActor();
@@ -57,7 +73,15 @@ void UParcelGrabber::Grab()
 void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-		
+	if (bGrabbing)
+	{
+		iGrabTimer++;
+	}
+	if (iGrabTimer > 3)
+	{
+		iGrabTimer = 0;
+		bGrabbing = false;
+	}
 	if (m_PhysicsHandle)
 	{
 		if (m_PhysicsHandle->GrabbedComponent)
@@ -77,7 +101,7 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				m_PhysicsHandle->ReleaseComponent();
 			}
 		}
-		else
+		else if(bGrabbing)
 		{			
 			// If we haven't grabbed anything, try grab something!
 			Grab();

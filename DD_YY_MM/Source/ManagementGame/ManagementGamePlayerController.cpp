@@ -40,9 +40,6 @@ void AManagementGamePlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("Grab&Release", IE_Pressed, this, &AManagementGamePlayerController::OnSetGrabPressed);
-	InputComponent->BindAction("Grab&Release", IE_Released, this, &AManagementGamePlayerController::OnSetGrabRelease);
-
 	
 	InputComponent->BindAxis("MoveForward" , this, &AManagementGamePlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight" , this, &AManagementGamePlayerController::MoveRight);
@@ -102,7 +99,6 @@ void AManagementGamePlayerController::CardinalMovement()
 
 void AManagementGamePlayerController::OnSetGrabPressed()
 {
-	bGrabbing = true;
 }
 void AManagementGamePlayerController::OnSetGrabRelease()
 {
