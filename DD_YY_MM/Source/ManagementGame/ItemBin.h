@@ -39,4 +39,6 @@ private:
 
 	// Pointer to world
 	UWorld* WorldPointer;
+
+
 };

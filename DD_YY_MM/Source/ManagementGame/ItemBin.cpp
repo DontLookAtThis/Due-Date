@@ -36,7 +36,8 @@ void UItemBin::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		if (PressurePlate->IsOverlappingActor(*It))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Actor overlapped."));
-			//(*It)->Destroy(); // UNCOMMENT THIS
+			(*It)->Destroy(); // UNCOMMENT THIS
+			(*It)->DestroyConstructedComponents();
 		}
 	}
 }

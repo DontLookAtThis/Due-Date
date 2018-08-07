@@ -34,6 +34,8 @@ void UParcelGrabber::BeginPlay()
 
 void UParcelGrabber::Grab()
 {
+	m_PhysicsHandle->ReleaseComponent();
+
 	auto HitResult = GetFirstPhysicsBodyInReach();
 	auto ComponentToGrab = HitResult.GetComponent();
 	auto ActorHit = HitResult.GetActor();
@@ -47,8 +49,7 @@ void UParcelGrabber::Grab()
 			ComponentToGrab->GetOwner()->GetActorLocation(),
 			true // allow rotation
 		);
-	}
-	
+	}	
 }
 
 // Called every frame
@@ -60,15 +61,24 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	{
 		if (m_PhysicsHandle->GrabbedComponent)
 		{
+			// Calculate the end of the raycast
 			FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();
 			FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
 			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
 
-			m_PhysicsHandle->SetTargetLocation(FVector(LineTraceEnd.X, LineTraceEnd.Y, LineTraceEnd.Z + 50.0f));
+			// Set the targets location to the end of the raycast
+			m_PhysicsHandle->SetTargetLocation(FVector(LineTraceEnd.X, LineTraceEnd.Y, LineTraceEnd.Z + 50.0f));			
+
+			// If the compenent we're holding is being destroyed, release it so we can go pick up another
+			if (m_PhysicsHandle->GrabbedComponent->IsBeingDestroyed())
+			{
+				m_PhysicsHandle->ReleaseComponent();
+			}
 		}
 		else
-		{
-			Grab();
+		{			
+			// If we haven't grabbed anything, try grab something!
+			Grab();			
 		}
 	}
 }
@@ -76,10 +86,9 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 FHitResult UParcelGrabber::GetFirstPhysicsBodyInReach()
 {
 	FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();
-	FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
-
-	/// Draw a red trace in the world to visualize
+	FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();	
 	FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
+
 	//DrawDebugLine(
 	//	GetWorld(),
 	//	PlayerPosition,
