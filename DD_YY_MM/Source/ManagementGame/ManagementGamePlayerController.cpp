@@ -9,6 +9,8 @@
 
 AManagementGamePlayerController::AManagementGamePlayerController()
 {
+	fMoveForward = 0.0f;
+	fMoveRight = 0.0f;
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
@@ -18,10 +20,7 @@ void AManagementGamePlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	// keep updating the destination every tick while desired
-	if (bMoveToMouseCursor)
-	{
-		MoveToMouseCursor();
-	}
+	CardinalMovement();
 }
 
 void AManagementGamePlayerController::SetupInputComponent()
@@ -29,14 +28,19 @@ void AManagementGamePlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AManagementGamePlayerController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination", IE_Released, this, &AManagementGamePlayerController::OnSetDestinationReleased);
+	//InputComponent->BindAction("SetDestination", IE_Pressed, this, &AManagementGamePlayerController::OnSetDestinationPressed);
+	//InputComponent->BindAction("SetDestination", IE_Released, this, &AManagementGamePlayerController::OnSetDestinationReleased);
+
+	
+	InputComponent->BindAxis("MoveForward" , this, &AManagementGamePlayerController::MoveForward);
+	InputComponent->BindAxis("MoveRight" , this, &AManagementGamePlayerController::MoveRight);
 
 	// support touch devices 
-	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AManagementGamePlayerController::MoveToTouchLocation);
-	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AManagementGamePlayerController::MoveToTouchLocation);
+	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AManagementGamePlayerController::MoveToTouchLocation);
+	//InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AManagementGamePlayerController::MoveToTouchLocation);
 
-	InputComponent->BindAction("ResetVR", IE_Pressed, this, &AManagementGamePlayerController::OnResetVR);
+
+	//InputComponent->BindAction("ResetVR", IE_Pressed, this, &AManagementGamePlayerController::OnResetVR);
 }
 
 void AManagementGamePlayerController::OnResetVR()
@@ -93,7 +97,7 @@ void AManagementGamePlayerController::SetNewMoveDestination(const FVector DestLo
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
 
 		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if (NavSys && (Distance > 120.0f))
+		if (NavSys && Distance > 120.0f)
 		{
 			NavSys->SimpleMoveToLocation(this, DestLocation);
 		}
@@ -111,3 +115,41 @@ void AManagementGamePlayerController::OnSetDestinationReleased()
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
 }
+
+void AManagementGamePlayerController::MoveForward(float AxisValue)
+{
+	fMoveForward = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
+
+}
+
+void AManagementGamePlayerController::MoveRight(float AxisValue)
+{
+	fMoveRight = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
+
+}
+
+void AManagementGamePlayerController::CardinalMovement()
+{
+	APawn* const MyPawn = GetPawn();
+
+	FVector Destination = MyPawn->GetActorLocation();
+	if (fMoveRight > 0.0f)
+	{
+		Destination.Y += 150.0f;
+	}
+	else if(fMoveRight < 0.0f)
+	{
+		Destination.Y -= 150.0f;
+	}
+	if (fMoveForward > 0.0f)
+	{
+		Destination.X += 150.0f;
+	}
+	else if(fMoveForward < 0.0f)
+	{
+		Destination.X -= 150.0f;
+	}
+	SetNewMoveDestination(Destination);
+}
+
+
