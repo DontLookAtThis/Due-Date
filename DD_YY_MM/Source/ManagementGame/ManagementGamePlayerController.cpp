@@ -99,6 +99,7 @@ void AManagementGamePlayerController::CardinalMovement()
 
 void AManagementGamePlayerController::OnSetGrabPressed()
 {
+
 }
 void AManagementGamePlayerController::OnSetGrabRelease()
 {
