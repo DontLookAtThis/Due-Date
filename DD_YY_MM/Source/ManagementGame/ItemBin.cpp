@@ -35,7 +35,27 @@ void UItemBin::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	{
 		if (PressurePlate->IsOverlappingActor(*It))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Actor overlapped."));
+			UE_LOG(LogTemp, Warning, TEXT("Parcel placed in bin."));
+			(*It)->Destroy(); // UNCOMMENT THIS
+			(*It)->DestroyConstructedComponents();
+		}
+	}
+	// Get all crates that exist in the scene	
+	for (TActorIterator<AActor> It(WorldPointer, CrateBlueprint); It; ++It)
+	{
+		if (PressurePlate->IsOverlappingActor(*It))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Crate placed in bin."));
+			(*It)->Destroy(); // UNCOMMENT THIS
+			(*It)->DestroyConstructedComponents();
+		}
+	}
+	// Get all boxes that exist in the scene	
+	for (TActorIterator<AActor> It(WorldPointer, BoxBlueprint); It; ++It)
+	{
+		if (PressurePlate->IsOverlappingActor(*It))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Box placed in bin."));
 			(*It)->Destroy(); // UNCOMMENT THIS
 			(*It)->DestroyConstructedComponents();
 		}
