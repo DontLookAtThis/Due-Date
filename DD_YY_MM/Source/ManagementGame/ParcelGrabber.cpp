@@ -5,7 +5,9 @@
 #include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
-
+#include "ManagementGamePlayerController.h"
+#include <iostream>
+#include <memory>
 
 // Sets default values for this component's properties
 UParcelGrabber::UParcelGrabber()
@@ -13,7 +15,6 @@ UParcelGrabber::UParcelGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 	// ...
 }
 
@@ -23,7 +24,7 @@ void UParcelGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	m_PlayerCharacter = GetWorld()->GetFirstPlayerController()->GetCharacter();
-
+	//m_pPlayerController = Cast<ManagementGamePlayerController>(GetWorld()->GetFirstPlayerController());
 	// Find physics handle
 	m_PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (!m_PhysicsHandle)
@@ -39,7 +40,7 @@ void UParcelGrabber::Grab()
 	auto HitResult = GetFirstPhysicsBodyInReach();
 	auto ComponentToGrab = HitResult.GetComponent();
 	auto ActorHit = HitResult.GetActor();
-
+	
 	if (ActorHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grabbing parcel."));

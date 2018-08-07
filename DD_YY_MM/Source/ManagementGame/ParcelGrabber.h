@@ -7,7 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "ParcelGrabber.generated.h"
-
+class ManagementGamePlayerController;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MANAGEMENTGAME_API UParcelGrabber : public UActorComponent
 {
@@ -32,5 +32,6 @@ private:
 
 	UPhysicsHandleComponent * m_PhysicsHandle = nullptr;	
 	ACharacter* m_PlayerCharacter;
+	ManagementGamePlayerController* m_pPlayerController;
 	float m_fReach = 150.0f; // grabber reach
 };
