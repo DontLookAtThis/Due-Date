@@ -67,7 +67,8 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
 
 			// Set the targets location to the end of the raycast
-			m_PhysicsHandle->SetTargetLocation(FVector(LineTraceEnd.X, LineTraceEnd.Y, LineTraceEnd.Z + 50.0f));			
+			m_PhysicsHandle->SetTargetLocation(FVector(LineTraceEnd.X, LineTraceEnd.Y, LineTraceEnd.Z + 50.0f));
+			m_PhysicsHandle->SetTargetRotation(m_PlayerCharacter->GetActorRotation());
 
 			// If the compenent we're holding is being destroyed, release it so we can go pick up another
 			if (m_PhysicsHandle->GrabbedComponent->IsBeingDestroyed())
@@ -78,7 +79,7 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		else
 		{			
 			// If we haven't grabbed anything, try grab something!
-			Grab();			
+			Grab();
 		}
 	}
 }
@@ -89,16 +90,16 @@ FHitResult UParcelGrabber::GetFirstPhysicsBodyInReach()
 	FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();	
 	FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
 
-	//DrawDebugLine(
-	//	GetWorld(),
-	//	PlayerPosition,
-	//	LineTraceEnd,
-	//	FColor(255, 0, 0),
-	//	false,
-	//	0.0f,
-	//	0.0f,
-	//	10.0f
-	//);
+	/*DrawDebugLine(
+		GetWorld(),
+		PlayerPosition,
+		LineTraceEnd,
+		FColor(255, 0, 0),
+		false,
+		0.0f,
+		0.0f,
+		10.0f
+	);*/
 
 	// Setup query parameters
 	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
