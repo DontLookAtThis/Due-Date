@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "ManagementGamePlayerController.h"
 #include "Components/InputComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include <iostream>
 #include "BoxMechanics.h"
 #include <memory>
@@ -80,6 +81,7 @@ void UParcelGrabber::Grab()
 	if (ActorHit)
 	{
 		ActorHit->FindComponentByClass<UBoxMechanics>()->bPickedUp = true;
+		ActorHit->FindComponentByClass<UStaticMeshComponent>()->SetSimulatePhysics(true);
 		UE_LOG(LogTemp, Warning, TEXT("Grabbing parcel."));
 		m_PhysicsHandle->GrabComponent(
 			ComponentToGrab,
