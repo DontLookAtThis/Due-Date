@@ -40,4 +40,5 @@ private:
 	APlayerController* m_pPlayerController;
 	UInputComponent* m_pInputComp;
 	float m_fReach = 150.0f; // grabber reach
+	float m_fHoldReach = 100.0f; // hold reach
 };

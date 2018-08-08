@@ -72,7 +72,6 @@ void AManagementGameCharacter::MoveForward(float AxisValue)
 	// Find out which way is "forward" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
 	AddMovementInput(Direction, AxisValue);
-
 }
 
 void AManagementGameCharacter::MoveRight(float AxisValue)
@@ -80,7 +79,6 @@ void AManagementGameCharacter::MoveRight(float AxisValue)
 	// Find out which way is "right" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
 	AddMovementInput(Direction, AxisValue);
-
 }
 
 
