@@ -11,7 +11,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
-#include "Components\StaticMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values for this component's properties
 UBoxMechanics::UBoxMechanics()
@@ -47,9 +47,11 @@ void UBoxMechanics::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	if (bOnConvey && !bPickedUp)
 	{
 		FVector loca = GetOwner()->GetActorLocation();
-		loca.Y += 5.0f;
+		FVector Movement(0.0f,-100000.0f,0.0f);
+		//loca = loca + Movement;
+		loca.Y -= 1.0f;
 		GetOwner()->SetActorLocation(loca);
-
+		//m_pMyMesh->AddForce(Movement);
 	}
 
 	// ...
