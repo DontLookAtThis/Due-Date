@@ -16,7 +16,12 @@ class MANAGEMENTGAME_API UParcelGrabber : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UParcelGrabber();
-
+	bool bGrabbing = false;
+	int iGrabTimer;
+	void OnSetGrabPressed();
+	void OnSetGrabRelease();
+	void OnSetYeetPressed();
+	void OnSetYeetReleased();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -32,6 +37,7 @@ private:
 
 	UPhysicsHandleComponent * m_PhysicsHandle = nullptr;	
 	ACharacter* m_PlayerCharacter;
-	ManagementGamePlayerController* m_pPlayerController;
+	APlayerController* m_pPlayerController;
+	UInputComponent* m_pInputComp;
 	float m_fReach = 150.0f; // grabber reach
 };
