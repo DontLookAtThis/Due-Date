@@ -20,6 +20,8 @@ public:
 	int iGrabTimer;
 	void OnSetGrabPressed();
 	void OnSetGrabRelease();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int iBoxType;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

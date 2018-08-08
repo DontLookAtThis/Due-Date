@@ -11,6 +11,7 @@
 #include <iostream>
 #include "BoxMechanics.h"
 #include <memory>
+#include "Components.h"
 //#include "BoxMechanics.h"
 // Sets default values for this component's properties
 UParcelGrabber::UParcelGrabber()
@@ -63,6 +64,7 @@ void UParcelGrabber::Grab()
 	{
 		ActorHit->FindComponentByClass<UBoxMechanics>()->bPickedUp = true;
 		ActorHit->FindComponentByClass<UStaticMeshComponent>()->SetSimulatePhysics(true);
+		iBoxType = ActorHit->FindComponentByClass<UBoxMechanics>()->iBoxType;
 		UE_LOG(LogTemp, Warning, TEXT("Grabbing parcel."));
 		m_PhysicsHandle->GrabComponent(
 			ComponentToGrab,

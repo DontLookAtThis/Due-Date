@@ -16,6 +16,8 @@ public:
 	UBoxMechanics();
 	bool bOnConvey;
 	bool bPickedUp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int iBoxType;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
