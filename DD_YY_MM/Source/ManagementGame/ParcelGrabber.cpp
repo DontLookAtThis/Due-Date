@@ -121,6 +121,9 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
 			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
 
+			UE_LOG(LogTemp, Warning, TEXT("GrabbedComponent FName: %s"), *m_PhysicsHandle->GrabbedComponent->GetReadableName());
+			//m_PhysicsHandle->GrabbedComponent->GetReadableName
+
 			// Set the targets location to the end of the raycast
 			m_PhysicsHandle->SetTargetLocation(FVector(LineTraceEnd.X, LineTraceEnd.Y, LineTraceEnd.Z + 50.0f));
 			m_PhysicsHandle->SetTargetRotation(m_PlayerCharacter->GetActorRotation());

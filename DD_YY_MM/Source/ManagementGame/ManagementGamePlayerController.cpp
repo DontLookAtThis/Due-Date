@@ -57,6 +57,7 @@ void AManagementGamePlayerController::SetNewMoveDestination(const FVector DestLo
 		if (NavSys && Distance > 120.0f)
 		{
 			NavSys->SimpleMoveToLocation(this, DestLocation);
+			
 		}
 	}
 }
