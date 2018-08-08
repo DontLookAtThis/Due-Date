@@ -20,6 +20,8 @@ public:
 	int iGrabTimer;
 	void OnSetGrabPressed();
 	void OnSetGrabRelease();
+	void OnSetYeetPressed();
+	void OnSetYeetReleased();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

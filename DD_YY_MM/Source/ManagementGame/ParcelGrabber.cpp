@@ -38,6 +38,9 @@ void UParcelGrabber::BeginPlay()
 		m_pInputComp->BindAction("Grab&Release", IE_Pressed, this, &UParcelGrabber::OnSetGrabPressed);
 		m_pInputComp->BindAction("Grab&Release", IE_Repeat, this, &UParcelGrabber::OnSetGrabPressed); // allows the player to hold the grab key and still pick up a box
 		m_pInputComp->BindAction("Grab&Release", IE_Released, this, &UParcelGrabber::OnSetGrabRelease);
+
+		m_pInputComp->BindAction("Yeet", IE_Pressed, this, &UParcelGrabber::OnSetYeetPressed);
+		m_pInputComp->BindAction("Yeet", IE_Released, this, &UParcelGrabber::OnSetYeetReleased);
 	}
 }
 
@@ -46,6 +49,21 @@ void UParcelGrabber::OnSetGrabPressed()
 	bGrabbing = true;
 }
 void UParcelGrabber::OnSetGrabRelease()
+{
+	bGrabbing = false;
+}
+
+void UParcelGrabber::OnSetYeetPressed()
+{
+	if (m_PhysicsHandle->GrabbedComponent != nullptr)
+	{
+		UPrimitiveComponent* GrabbedComp = m_PhysicsHandle->GrabbedComponent;
+		m_PhysicsHandle->ReleaseComponent();
+		GrabbedComp->AddImpulse(m_PlayerCharacter->GetActorForwardVector() * 1500.0f, NAME_None, true);		
+	}
+}
+
+void UParcelGrabber::OnSetYeetReleased()
 {
 
 }
