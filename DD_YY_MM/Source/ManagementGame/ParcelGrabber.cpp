@@ -38,7 +38,6 @@ void UParcelGrabber::BeginPlay()
 	if (m_pInputComp)
 	{
 		m_pInputComp->BindAction("Grab&Release", IE_Pressed, this, &UParcelGrabber::OnSetGrabPressed);
-		m_pInputComp->BindAction("Grab&Release", IE_Repeat, this, &UParcelGrabber::OnSetGrabPressed); // allows the player to hold the grab key and still pick up a box
 		m_pInputComp->BindAction("Grab&Release", IE_Released, this, &UParcelGrabber::OnSetGrabRelease);
 
 		m_pInputComp->BindAction("Yeet", IE_Pressed, this, &UParcelGrabber::OnSetYeetPressed);
@@ -61,7 +60,10 @@ void UParcelGrabber::OnSetYeetPressed()
 	{
 		UPrimitiveComponent* GrabbedComp = m_PhysicsHandle->GrabbedComponent;
 		m_PhysicsHandle->ReleaseComponent();
-		GrabbedComp->AddImpulse(m_PlayerCharacter->GetActorForwardVector() * 1500.0f, NAME_None, true);		
+		FVector YEET = m_PlayerCharacter->GetActorForwardVector();
+		YEET.Z += 0.5f;
+		GrabbedComp->AddImpulse(YEET * 150.0f, NAME_None, true);
+
 	}
 }
 
@@ -96,15 +98,6 @@ void UParcelGrabber::Grab()
 void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (bGrabbing)
-	{
-		iGrabTimer++;
-	}
-	if (iGrabTimer > 3)
-	{
-		iGrabTimer = 0;
-		bGrabbing = false;
-	}
 	if (m_PhysicsHandle)
 	{
 		/*DrawDebugLine(
