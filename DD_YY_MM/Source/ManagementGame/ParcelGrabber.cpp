@@ -61,8 +61,11 @@ void UParcelGrabber::OnSetYeetPressed()
 		UPrimitiveComponent* GrabbedComp = m_PhysicsHandle->GrabbedComponent;
 		UPrimitiveComponent* thrownitem = m_PhysicsHandle->GrabbedComponent;
 		m_PhysicsHandle->ReleaseComponent();
-		thrownitem->SetSimulatePhysics(false);
-		thrownitem->SetSimulatePhysics(true);
+		if (thrownitem)
+		{
+			thrownitem->SetSimulatePhysics(false);
+			thrownitem->SetSimulatePhysics(true);
+		}
 		FVector YEET = m_PlayerCharacter->GetActorForwardVector();
 		YEET.Z += 0.5f;
 		GrabbedComp->AddImpulse(YEET * 1500.0f, NAME_None, true);
@@ -79,8 +82,11 @@ void UParcelGrabber::Grab()
 {
 	UPrimitiveComponent* thrownitem = m_PhysicsHandle->GrabbedComponent;
 	m_PhysicsHandle->ReleaseComponent();
-	thrownitem->SetSimulatePhysics(false);
-	thrownitem->SetSimulatePhysics(true);
+	if (thrownitem)
+	{
+		thrownitem->SetSimulatePhysics(false);
+		thrownitem->SetSimulatePhysics(true);
+	}
 	auto HitResult = GetFirstPhysicsBodyInReach();
 	auto ComponentToGrab = HitResult.GetComponent();
 	auto ActorHit = HitResult.GetActor();
