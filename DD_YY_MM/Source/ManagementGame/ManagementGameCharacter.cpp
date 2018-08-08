@@ -19,14 +19,15 @@ AManagementGameCharacter::AManagementGameCharacter()
 	
 	// Don't rotate character to camera direction
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 1000.0f, 0.f);
+	//GetCharacterMovement()->RotationRate = FRotator(0.f, 1000.0f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
 
 	// Create a camera boom...
 	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));

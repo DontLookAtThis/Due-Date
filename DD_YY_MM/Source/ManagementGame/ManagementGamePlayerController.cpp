@@ -22,17 +22,10 @@ void AManagementGamePlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	// keep updating the destination every tick while desired
+
+
 	CardinalMovement();
 
-	if (bGrabbing)
-	{
-		iGrabTimer++;
-	}
-	if (iGrabTimer > 3)
-	{
-		iGrabTimer = 0;
-		bGrabbing = false;
-	}
 }
 
 void AManagementGamePlayerController::SetupInputComponent()
@@ -56,9 +49,10 @@ void AManagementGamePlayerController::SetNewMoveDestination(const FVector DestLo
 		// We need to issue move command only if far enough in order for walk animation to play correctly
 		if (NavSys && Distance > 90.0f)
 		{
+
 			NavSys->SimpleMoveToLocation(this, DestLocation);
-			
 		}
+
 	}
 }
 
@@ -95,9 +89,8 @@ void AManagementGamePlayerController::CardinalMovement()
 	//{
 	//	Destination.X -= 100.0f;
 	//}
-
-	Destination.Y += (fMoveRight * 100.0f);
-	Destination.X -= (fMoveForward * 100.0f);
+	Destination.Y += (fMoveRight * 300.0f);
+	Destination.X -= (fMoveForward * 300.0f);
 	SetNewMoveDestination(Destination);
 }
 
