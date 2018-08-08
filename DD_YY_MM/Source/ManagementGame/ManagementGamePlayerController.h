@@ -34,9 +34,6 @@ protected:
 	void OnSetGrabPressed();
 	void OnSetGrabRelease();
 
-	void MoveForward(float AxisValue);
-	void MoveRight(float AxisValue);
-	void CardinalMovement();
 };
 
 

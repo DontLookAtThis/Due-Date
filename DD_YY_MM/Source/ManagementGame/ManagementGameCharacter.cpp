@@ -23,8 +23,8 @@ AManagementGameCharacter::AManagementGameCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
-	//GetCharacterMovement()->RotationRate = FRotator(0.f, 1000.0f, 0.f);
+	GetCharacterMovement()->bOrientRotationToMovement = false; // Rotate character to moving direction
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 1000.0f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
@@ -57,10 +57,38 @@ AManagementGameCharacter::AManagementGameCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
+// Called to bind functionality to input
+void AManagementGameCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	// Set up "movement" bindings.
+	PlayerInputComponent->BindAxis("MoveForward", this, &AManagementGameCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AManagementGameCharacter::MoveRight);
+}
+
+void AManagementGameCharacter::MoveForward(float AxisValue)
+{
+	// Find out which way is "forward" and record that the player wants to move that way.
+	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
+	AddMovementInput(Direction, AxisValue);
+
+}
+
+void AManagementGameCharacter::MoveRight(float AxisValue)
+{
+	// Find out which way is "right" and record that the player wants to move that way.
+	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
+	AddMovementInput(Direction, AxisValue);
+
+}
+
 
 void AManagementGameCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+	
 
 	//if (CursorToWorld != nullptr)
 	//{
