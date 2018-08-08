@@ -36,6 +36,7 @@ void UParcelGrabber::BeginPlay()
 	if (m_pInputComp)
 	{
 		m_pInputComp->BindAction("Grab&Release", IE_Pressed, this, &UParcelGrabber::OnSetGrabPressed);
+		m_pInputComp->BindAction("Grab&Release", IE_Repeat, this, &UParcelGrabber::OnSetGrabPressed); // allows the player to hold the grab key and still pick up a box
 		m_pInputComp->BindAction("Grab&Release", IE_Released, this, &UParcelGrabber::OnSetGrabRelease);
 	}
 }
@@ -84,6 +85,17 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	}
 	if (m_PhysicsHandle)
 	{
+		/*DrawDebugLine(
+		GetWorld(),
+		DebugPlayerPosition,
+		DebugLineTraceEnd,
+		FColor(255, 0, 0),
+		false,
+		0.0f,
+		0.0f,
+		10.0f
+		);*/
+
 		if (m_PhysicsHandle->GrabbedComponent)
 		{
 			// Calculate the end of the raycast
@@ -113,31 +125,35 @@ FHitResult UParcelGrabber::GetFirstPhysicsBodyInReach()
 {
 	FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();
 	FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();	
-	FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
+	FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;	
 
-	/*DrawDebugLine(
-		GetWorld(),
-		PlayerPosition,
-		LineTraceEnd,
-		FColor(255, 0, 0),
-		false,
-		0.0f,
-		0.0f,
-		10.0f
-	);*/
+	// Debug Box Trace
+	//DrawDebugBox(
+	//	GetWorld(),
+	//	LineTraceEnd,
+	//	FVector(50, 50, 50),
+	//	FColor::Purple,
+	//	false,
+	//	-1,
+	//	0,
+	//	10.0f
+	//);
 
 	// Setup query parameters
 	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
 
-	/// Line-trace (ray-cast) out to reach distance
+	/// Box-trace (ray-cast) out to reach distance
 	FHitResult LineTraceHit;
-	GetWorld()->LineTraceSingleByObjectType(
+	FCollisionShape Shape = FCollisionShape::MakeBox(FVector(50.0f, 50.0f, 50.0f));
+	GetWorld()->SweepSingleByObjectType(
 		LineTraceHit,
-		FVector(PlayerPosition.X, PlayerPosition.Y, PlayerPosition.Z - 120.0f),
+		PlayerPosition,
 		LineTraceEnd,
-		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
-		TraceParameters
-	);
+		FQuat(),
+		ECollisionChannel::ECC_PhysicsBody,
+		Shape,
+		FCollisionQueryParams()			
+	);	
 
 	// See what we hit
 	AActor* ActorHit = LineTraceHit.GetActor();
