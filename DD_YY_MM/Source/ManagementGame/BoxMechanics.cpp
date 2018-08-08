@@ -47,9 +47,9 @@ void UBoxMechanics::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	if (bOnConvey && !bPickedUp)
 	{
 		FVector loca = GetOwner()->GetActorLocation();
-		FVector Movement(0.0f,-100000.0f,0.0f);
+		FVector Movement(-100000.0f, 0.0f, 0.0f);
 		//loca = loca + Movement;
-		loca.Y -= 1.0f;
+		loca.X += 1.0f;
 		GetOwner()->SetActorLocation(loca);
 		//m_pMyMesh->AddForce(Movement);
 	}
