@@ -54,7 +54,7 @@ void AManagementGamePlayerController::SetNewMoveDestination(const FVector DestLo
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
 
 		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if (NavSys && Distance > 120.0f)
+		if (NavSys && Distance > 90.0f)
 		{
 			NavSys->SimpleMoveToLocation(this, DestLocation);
 			
@@ -79,27 +79,31 @@ void AManagementGamePlayerController::CardinalMovement()
 	APawn* const MyPawn = GetPawn();
 
 	FVector Destination = MyPawn->GetActorLocation();
-	if (fMoveRight > 0.0f)
-	{
-		Destination.Y += 150.0f;
-	}
-	else if(fMoveRight < 0.0f)
-	{
-		Destination.Y -= 150.0f;
-	}
-	if (fMoveForward > 0.0f)
-	{
-		Destination.X += 150.0f;
-	}
-	else if(fMoveForward < 0.0f)
-	{
-		Destination.X -= 150.0f;
-	}
+	//if (fMoveRight > 0.0f)
+	//{
+	//	Destination.Y += 100.0f;
+	//}
+	//else if(fMoveRight < 0.0f)
+	//{
+	//	Destination.Y -= 100.0f;
+	//}
+	//if (fMoveForward > 0.0f)
+	//{
+	//	Destination.X += 100.0f;
+	//}
+	//else if(fMoveForward < 0.0f)
+	//{
+	//	Destination.X -= 100.0f;
+	//}
+
+	Destination.Y += (fMoveRight * 100.0f);
+	Destination.X -= (fMoveForward * 100.0f);
 	SetNewMoveDestination(Destination);
 }
 
 void AManagementGamePlayerController::OnSetGrabPressed()
 {
+
 }
 void AManagementGamePlayerController::OnSetGrabRelease()
 {

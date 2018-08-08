@@ -8,8 +8,9 @@
 #include "ManagementGamePlayerController.h"
 #include "Components/InputComponent.h"
 #include <iostream>
+#include "BoxMechanics.h"
 #include <memory>
-
+//#include "BoxMechanics.h"
 // Sets default values for this component's properties
 UParcelGrabber::UParcelGrabber()
 {
@@ -78,6 +79,7 @@ void UParcelGrabber::Grab()
 	
 	if (ActorHit)
 	{
+		ActorHit->FindComponentByClass<UBoxMechanics>()->bPickedUp = true;
 		UE_LOG(LogTemp, Warning, TEXT("Grabbing parcel."));
 		m_PhysicsHandle->GrabComponent(
 			ComponentToGrab,
