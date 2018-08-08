@@ -78,22 +78,25 @@ void AManagementGamePlayerController::CardinalMovement()
 	APawn* const MyPawn = GetPawn();
 
 	FVector Destination = MyPawn->GetActorLocation();
-	if (fMoveRight > 0.0f)
-	{
-		Destination.Y += 100.0f;
-	}
-	else if(fMoveRight < 0.0f)
-	{
-		Destination.Y -= 100.0f;
-	}
-	if (fMoveForward > 0.0f)
-	{
-		Destination.X += 100.0f;
-	}
-	else if(fMoveForward < 0.0f)
-	{
-		Destination.X -= 100.0f;
-	}
+	//if (fMoveRight > 0.0f)
+	//{
+	//	Destination.Y += 100.0f;
+	//}
+	//else if(fMoveRight < 0.0f)
+	//{
+	//	Destination.Y -= 100.0f;
+	//}
+	//if (fMoveForward > 0.0f)
+	//{
+	//	Destination.X += 100.0f;
+	//}
+	//else if(fMoveForward < 0.0f)
+	//{
+	//	Destination.X -= 100.0f;
+	//}
+
+	Destination.Y += (fMoveRight * 100.0f);
+	Destination.X -= (fMoveForward * 100.0f);
 	SetNewMoveDestination(Destination);
 }
 

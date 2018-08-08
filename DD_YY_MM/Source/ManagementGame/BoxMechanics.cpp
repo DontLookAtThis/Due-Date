@@ -61,12 +61,14 @@ void UBoxMechanics::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Error, TEXT("Box On Belt;"), *GetOwner()->GetName());
-	bOnConvey = true;
+	bOnConvey = true; 
+	m_pMyMesh->SetSimulatePhysics(false)
 }
 
 void UBoxMechanics::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	bOnConvey = false;
+	m_pMyMesh->SetSimulatePhysics(true);
 }
 
 
