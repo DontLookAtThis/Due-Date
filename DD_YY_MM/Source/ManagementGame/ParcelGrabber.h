@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/ActorComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "ParcelGrabber.generated.h"
+
 class ManagementGamePlayerController;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MANAGEMENTGAME_API UParcelGrabber : public UActorComponent
@@ -38,6 +40,11 @@ private:
 	UPhysicsHandleComponent * m_PhysicsHandle = nullptr;	
 	ACharacter* m_PlayerCharacter;
 	APlayerController* m_pPlayerController;
-	UInputComponent* m_pInputComp;
+	UInputComponent* m_pInputComp;		
 	float m_fReach = 150.0f; // grabber reach
+
+	float m_fDefaultMovespeed = 600.0f;
+	float m_fCrateMovespeed = 400.0f;
+	float m_fBaseboxMovespeed = 500.0f;
+	float m_fSmallboxMovespeed = 580.0f;
 };

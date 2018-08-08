@@ -11,6 +11,7 @@
 #include <iostream>
 #include "BoxMechanics.h"
 #include <memory>
+
 //#include "BoxMechanics.h"
 // Sets default values for this component's properties
 UParcelGrabber::UParcelGrabber()
@@ -28,22 +29,21 @@ void UParcelGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	m_PlayerCharacter = GetWorld()->GetFirstPlayerController()->GetCharacter();
-	m_pInputComp = GetOwner()->FindComponentByClass<UInputComponent>();
-	// Find physics handle
-	m_PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	m_pInputComp = GetOwner()->FindComponentByClass<UInputComponent>();	
+	m_PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();	
+
 	if (!m_PhysicsHandle)
 	{
 		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle ERROR : Owner = %s"), *GetOwner()->GetName());
 	}	
 	if (m_pInputComp)
 	{
-		m_pInputComp->BindAction("Grab&Release", IE_Pressed, this, &UParcelGrabber::OnSetGrabPressed);
-		m_pInputComp->BindAction("Grab&Release", IE_Repeat, this, &UParcelGrabber::OnSetGrabPressed); // allows the player to hold the grab key and still pick up a box
+		m_pInputComp->BindAction("Grab&Release", IE_Pressed, this, &UParcelGrabber::OnSetGrabPressed);		
 		m_pInputComp->BindAction("Grab&Release", IE_Released, this, &UParcelGrabber::OnSetGrabRelease);
 
 		m_pInputComp->BindAction("Yeet", IE_Pressed, this, &UParcelGrabber::OnSetYeetPressed);
 		m_pInputComp->BindAction("Yeet", IE_Released, this, &UParcelGrabber::OnSetYeetReleased);
-	}
+	}	
 }
 
 void UParcelGrabber::OnSetGrabPressed()
@@ -62,6 +62,7 @@ void UParcelGrabber::OnSetYeetPressed()
 		UPrimitiveComponent* GrabbedComp = m_PhysicsHandle->GrabbedComponent;
 		m_PhysicsHandle->ReleaseComponent();
 		GrabbedComp->AddImpulse(m_PlayerCharacter->GetActorForwardVector() * 1500.0f, NAME_None, true);		
+		m_PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = m_fDefaultMovespeed; // SET MOVEMENTBACK TO DEFAULT
 	}
 }
 
@@ -72,6 +73,7 @@ void UParcelGrabber::OnSetYeetReleased()
 
 void UParcelGrabber::Grab()
 {
+	m_PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = m_fDefaultMovespeed; // SET MOVEMENTBACK TO DEFAULT
 	m_PhysicsHandle->ReleaseComponent();
 	
 	auto HitResult = GetFirstPhysicsBodyInReach();
@@ -95,16 +97,7 @@ void UParcelGrabber::Grab()
 // Called every frame
 void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (bGrabbing)
-	{
-		iGrabTimer++;
-	}
-	if (iGrabTimer > 3)
-	{
-		iGrabTimer = 0;
-		bGrabbing = false;
-	}
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);	
 	if (m_PhysicsHandle)
 	{
 		/*DrawDebugLine(
@@ -123,18 +116,35 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			// Calculate the end of the raycast
 			FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();
 			FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
-			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
-
-			UE_LOG(LogTemp, Warning, TEXT("GrabbedComponent FName: %s"), *m_PhysicsHandle->GrabbedComponent->GetReadableName());
-			//m_PhysicsHandle->GrabbedComponent->GetReadableName
+			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;			
 
 			// Set the targets location to the end of the raycast
 			m_PhysicsHandle->SetTargetLocation(FVector(LineTraceEnd.X, LineTraceEnd.Y, LineTraceEnd.Z + 50.0f));
 			m_PhysicsHandle->SetTargetRotation(m_PlayerCharacter->GetActorRotation());
 
+			// Check what the player has grabbed
+			UE_LOG(LogTemp, Warning, TEXT("GrabbedComponent FName: %s"), *m_PhysicsHandle->GrabbedComponent->GetReadableName());
+			FString ObjectName = m_PhysicsHandle->GrabbedComponent->GetReadableName();
+
+			//////////////////// THIS WILL BE BROKEN IF THE NAMES OF ANY OF THE ASSETS ARE CHANGED MUCH
+			// Read the name of the object			
+			if (ObjectName.Find("Crate") != std::string::npos)
+			{
+				m_PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = m_fCrateMovespeed;
+			}
+			else if (ObjectName.Find("Small") != std::string::npos)
+			{
+				m_PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = m_fSmallboxMovespeed;
+			}
+			else if (ObjectName.Find("Base") != std::string::npos)
+			{
+				m_PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = m_fBaseboxMovespeed;
+			}
+
 			// If the compenent we're holding is being destroyed, release it so we can go pick up another
 			if (m_PhysicsHandle->GrabbedComponent->IsBeingDestroyed())
 			{
+				m_PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = m_fDefaultMovespeed; // SET MOVEMENTBACK TO DEFAULT
 				m_PhysicsHandle->ReleaseComponent();
 			}
 		}
