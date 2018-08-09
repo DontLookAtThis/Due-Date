@@ -13,12 +13,12 @@
 #include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
 #include <string>
-#include "Components/DestructibleComponent.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values for this component's properties
 UBoxMechanics::UBoxMechanics()
 {
-	deathTimer = 85;
+	deathTimer = 160;
 	bStartup = true;
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -26,6 +26,27 @@ UBoxMechanics::UBoxMechanics()
 	//GetOwner()->FindComponentByClass<UStaticMeshComponent>()->OnComponentBeginOverlap.AddDynamic(this, &UBoxMechanics::OnConveyor);
 	bOnConvey = false;
 	bPickedUp = false;
+	//if (iBoxType == 1)
+	//{
+	//	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Parcel_Assets/Small_Box/DestrucibleFragileBox.DestrucibleFragileBox'"));
+	//	if (ItemBlueprint.Object) {
+	//		DestrucitbleBox = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	//	}
+	//}
+	//else if(iBoxType == 2)
+	//{
+	//	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Parcel_Assets/NormalParcel/3rdBoxDestructible.3rdBoxDestructible'"));
+	//	if (ItemBlueprint.Object) {
+	//		DestrucitbleBox = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	//	}
+	//}
+	//else if(iBoxType == 3)
+	//{
+	//	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Parcel_Assets/Crate/CrateDestructible.CrateDestructible'"));
+	//	if (ItemBlueprint.Object) {
+	//		DestrucitbleBox = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	//	}
+	//}
 }
 
 
@@ -34,11 +55,11 @@ void UBoxMechanics::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
-	m_pMyDesMesh = GetOwner()->FindComponentByClass<UDestructibleCompoenent>();
+	//m_pMyBoxCollider = GetOwner()->FindComponentByClass<UBoxComponent>();
 	m_pMyMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
-	m_pMyDesMesh->bGenerateOverlapEvents = true;
-	m_pMyDesMesh->OnComponentBeginOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapBegin);
-	m_pMyDesMesh->OnComponentEndOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapEnd);
+	m_pMyMesh->bGenerateOverlapEvents = true;
+	m_pMyMesh->OnComponentBeginOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapBegin);
+	m_pMyMesh->OnComponentEndOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapEnd);
 }
 
 
@@ -96,6 +117,14 @@ void UBoxMechanics::BreakItem()
 	}
 	if (deathTimer <= 0)
 	{
+		FActorSpawnParameters params;
+		params.Owner = GetOwner();
+
+		FRotator rotation = GetOwner()->GetActorRotation();
+		FVector location = GetOwner()->GetActorLocation();
+
+
+		GetWorld()->SpawnActor<AActor>(DestrucitbleBox, location, rotation);
 		GetOwner()->Destroy();
 	}
 }
