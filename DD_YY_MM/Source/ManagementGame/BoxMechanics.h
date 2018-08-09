@@ -7,6 +7,7 @@
 #include "BoxMechanics.generated.h"
 
 class UStaticMeshComponent;
+class UDestructibleCompoenent;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MANAGEMENTGAME_API UBoxMechanics : public UActorComponent
 {
@@ -21,6 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 	bool bStartup;
 	UStaticMeshComponent* m_pMyMesh;
+	UDestructibleCompoenent* m_pMyDesMesh;
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

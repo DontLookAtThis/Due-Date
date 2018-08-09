@@ -12,6 +12,8 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
+#include <string>
+#include "Components/DestructibleComponent.h"
 
 // Sets default values for this component's properties
 UBoxMechanics::UBoxMechanics()
@@ -32,11 +34,11 @@ void UBoxMechanics::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
-
+	m_pMyDesMesh = GetOwner()->FindComponentByClass<UDestructibleCompoenent>();
 	m_pMyMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
-	m_pMyMesh->bGenerateOverlapEvents = true;
-	m_pMyMesh->OnComponentBeginOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapBegin);
-	m_pMyMesh->OnComponentEndOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapEnd);
+	m_pMyDesMesh->bGenerateOverlapEvents = true;
+	m_pMyDesMesh->OnComponentBeginOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapBegin);
+	m_pMyDesMesh->OnComponentEndOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapEnd);
 }
 
 
@@ -54,7 +56,22 @@ void UBoxMechanics::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		//m_pMyMesh->AddForce(Movement);
 	}
 	BreakItem();
-	// ...
+	//if (bOnConvey)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolOncConvey: True"));
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolOncConvey: False"));
+	//}
+	//if (bPickedUp)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolPickedUP : True"));
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolPickedUP : False"));
+	//}
 }
 
 void UBoxMechanics::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
