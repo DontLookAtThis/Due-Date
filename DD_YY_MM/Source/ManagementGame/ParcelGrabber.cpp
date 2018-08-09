@@ -140,7 +140,7 @@ void UParcelGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			// Calculate the end of the raycast
 			FVector PlayerForward = m_PlayerCharacter->GetActorForwardVector();
 			FVector PlayerPosition = m_PlayerCharacter->GetActorLocation();
-			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fReach;
+			FVector LineTraceEnd = PlayerPosition + PlayerForward * m_fHoldReach;
 
 			UE_LOG(LogTemp, Warning, TEXT("GrabbedComponent FName: %s"), *m_PhysicsHandle->GrabbedComponent->GetReadableName());
 			//m_PhysicsHandle->GrabbedComponent->GetReadableName
