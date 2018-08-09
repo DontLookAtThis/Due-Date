@@ -6,7 +6,9 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "ManagementGamePlayerController.h"
+#include "ConstructorHelpers.h"
 #include "Components/InputComponent.h"
+#include "Classes/Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 #include <iostream>
 #include "BoxMechanics.h"
@@ -20,6 +22,9 @@ UParcelGrabber::UParcelGrabber()
 	PrimaryComponentTick.bCanEverTick = true;
 	iGrabTimer = 0;
 	// ...
+
+	m_pYeetSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("SoundWave'/Game/Sound/RawSounds/Throw3.Throw3'")).Object;
+	m_pGrabSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("SoundWave'/Game/Sound/RawSounds/PickUp.PickUp'")).Object;
 }
 
 
@@ -43,6 +48,8 @@ void UParcelGrabber::BeginPlay()
 		m_pInputComp->BindAction("Yeet", IE_Pressed, this, &UParcelGrabber::OnSetYeetPressed);
 		//m_pInputComp->BindAction("Yeet", IE_Released, this, &UParcelGrabber::OnSetYeetReleased);
 	}
+
+	
 }
 
 void UParcelGrabber::OnSetGrabPressed()
@@ -51,6 +58,8 @@ void UParcelGrabber::OnSetGrabPressed()
 	if (bGrabbing == false && bThrown == false && !thrownitem)
 	{
 		bGrabbing = true;
+
+
 	}
 }
 void UParcelGrabber::OnSetGrabRelease()
@@ -59,6 +68,9 @@ void UParcelGrabber::OnSetGrabRelease()
 	if (bThrown == true)
 	{
 		OnSetYeetReleased();
+
+		//plays the throwing sound
+		UGameplayStatics::PlaySound2D(m_PlayerCharacter, m_pYeetSound, 1.0f, 2.0f, 0.6f);
 	}
 }
 
@@ -115,6 +127,8 @@ void UParcelGrabber::Grab()
 			ComponentToGrab->GetOwner()->GetActorLocation(),
 			true // allow rotation
 		);
+		//plays the grab sound
+		UGameplayStatics::PlaySound2D(m_PlayerCharacter, m_pGrabSound, 1.0f, 2.0f, 0.6f);
 	}	
 }
 

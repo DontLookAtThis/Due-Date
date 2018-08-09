@@ -40,6 +40,8 @@ private:
 	ACharacter* m_PlayerCharacter;
 	APlayerController* m_pPlayerController;
 	UInputComponent* m_pInputComp;
+	USoundBase* m_pYeetSound;
+	USoundBase* m_pGrabSound;
 	float m_fReach = 150.0f; // grabber reach
 	float m_fHoldReach = 100.0f; // hold reach
 };
