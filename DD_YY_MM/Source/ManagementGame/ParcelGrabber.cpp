@@ -116,7 +116,7 @@ void UParcelGrabber::Grab()
 	auto ComponentToGrab = HitResult.GetComponent();
 	auto ActorHit = HitResult.GetActor();
 	
-	if (ActorHit)
+	if (ActorHit->FindComponentByClass<UBoxMechanics>())
 	{
 		ActorHit->FindComponentByClass<UBoxMechanics>()->bPickedUp = true;
 		ActorHit->FindComponentByClass<UStaticMeshComponent>()->SetSimulatePhysics(true);
@@ -213,7 +213,7 @@ FHitResult UParcelGrabber::GetFirstPhysicsBodyInReach()
 
 	// See what we hit
 	AActor* ActorHit = LineTraceHit.GetActor();
-	if (ActorHit)
+	if (ActorHit->FindComponentByClass<UBoxMechanics>())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s hit."), *LineTraceHit.GetActor()->GetName());
 		return LineTraceHit;
