@@ -41,41 +41,53 @@ void UParcelGrabber::BeginPlay()
 		m_pInputComp->BindAction("Grab&Release", IE_Released, this, &UParcelGrabber::OnSetGrabRelease);
 
 		m_pInputComp->BindAction("Yeet", IE_Pressed, this, &UParcelGrabber::OnSetYeetPressed);
-		m_pInputComp->BindAction("Yeet", IE_Released, this, &UParcelGrabber::OnSetYeetReleased);
+		//m_pInputComp->BindAction("Yeet", IE_Released, this, &UParcelGrabber::OnSetYeetReleased);
 	}
 }
 
 void UParcelGrabber::OnSetGrabPressed()
 {
-	bGrabbing = true;
+	UPrimitiveComponent* thrownitem = m_PhysicsHandle->GrabbedComponent;
+	if (bGrabbing == false && bThrown == false && !thrownitem)
+	{
+		bGrabbing = true;
+	}
 }
 void UParcelGrabber::OnSetGrabRelease()
 {
 	bGrabbing = false;
+	if (bThrown == true)
+	{
+		OnSetYeetReleased();
+	}
 }
 
 void UParcelGrabber::OnSetYeetPressed()
 {
-	if (m_PhysicsHandle->GrabbedComponent != nullptr)
+	UPrimitiveComponent* thrownitem = m_PhysicsHandle->GrabbedComponent;
+	if (bThrown == false && thrownitem && bGrabbing == false)
 	{
-		UPrimitiveComponent* GrabbedComp = m_PhysicsHandle->GrabbedComponent;
-		UPrimitiveComponent* thrownitem = m_PhysicsHandle->GrabbedComponent;
-		m_PhysicsHandle->ReleaseComponent();
-		if (thrownitem)
+		bThrown = true;
+		if (m_PhysicsHandle->GrabbedComponent != nullptr)
 		{
-			thrownitem->SetSimulatePhysics(false);
-			thrownitem->SetSimulatePhysics(true);
-		}
-		FVector YEET = m_PlayerCharacter->GetActorForwardVector();
-		YEET.Z += 0.5f;
-		GrabbedComp->AddImpulse(YEET * 1500.0f, NAME_None, true);
+			UPrimitiveComponent* GrabbedComp = m_PhysicsHandle->GrabbedComponent;
+			m_PhysicsHandle->ReleaseComponent();
+			if (thrownitem)
+			{
+				thrownitem->SetSimulatePhysics(false);
+				thrownitem->SetSimulatePhysics(true);
+			}
+			FVector YEET = m_PlayerCharacter->GetActorForwardVector();
+			YEET.Z += 0.5f;
+			GrabbedComp->AddImpulse(YEET * 1500.0f, NAME_None, true);
 
+		}
 	}
 }
 
 void UParcelGrabber::OnSetYeetReleased()
 {
-
+	bThrown = false;
 }
 
 void UParcelGrabber::Grab()

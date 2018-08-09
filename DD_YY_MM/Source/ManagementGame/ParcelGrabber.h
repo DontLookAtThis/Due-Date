@@ -17,6 +17,7 @@ public:
 	// Sets default values for this component's properties
 	UParcelGrabber();
 	bool bGrabbing = false;
+	bool bThrown = false;
 	int iGrabTimer;
 	void OnSetGrabPressed();
 	void OnSetGrabRelease();
