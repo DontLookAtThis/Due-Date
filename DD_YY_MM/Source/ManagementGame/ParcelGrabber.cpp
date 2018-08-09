@@ -116,19 +116,22 @@ void UParcelGrabber::Grab()
 	auto ComponentToGrab = HitResult.GetComponent();
 	auto ActorHit = HitResult.GetActor();
 	
-	if (ActorHit->FindComponentByClass<UBoxMechanics>())
+	if (ActorHit)
 	{
-		ActorHit->FindComponentByClass<UBoxMechanics>()->bPickedUp = true;
-		ActorHit->FindComponentByClass<UStaticMeshComponent>()->SetSimulatePhysics(true);
-		UE_LOG(LogTemp, Warning, TEXT("Grabbing parcel."));
-		m_PhysicsHandle->GrabComponent(
-			ComponentToGrab,
-			NAME_None,
-			ComponentToGrab->GetOwner()->GetActorLocation(),
-			true // allow rotation
-		);
-		//plays the grab sound
-		UGameplayStatics::PlaySound2D(m_PlayerCharacter, m_pGrabSound, 1.0f, 2.0f, 0.6f);
+		if (ActorHit->FindComponentByClass<UBoxMechanics>())
+		{
+			ActorHit->FindComponentByClass<UBoxMechanics>()->bPickedUp = true;
+			ActorHit->FindComponentByClass<UStaticMeshComponent>()->SetSimulatePhysics(true);
+			UE_LOG(LogTemp, Warning, TEXT("Grabbing parcel."));
+			m_PhysicsHandle->GrabComponent(
+				ComponentToGrab,
+				NAME_None,
+				ComponentToGrab->GetOwner()->GetActorLocation(),
+				true // allow rotation
+			);
+			//plays the grab sound
+			UGameplayStatics::PlaySound2D(m_PlayerCharacter, m_pGrabSound, 1.0f, 2.0f, 0.6f);
+		}
 	}	
 }
 
@@ -213,10 +216,17 @@ FHitResult UParcelGrabber::GetFirstPhysicsBodyInReach()
 
 	// See what we hit
 	AActor* ActorHit = LineTraceHit.GetActor();
-	if (ActorHit->FindComponentByClass<UBoxMechanics>())
+	if (ActorHit)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s hit."), *LineTraceHit.GetActor()->GetName());
-		return LineTraceHit;
+		if (ActorHit->FindComponentByClass<UBoxMechanics>())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s hit."), *LineTraceHit.GetActor()->GetName());
+			return LineTraceHit;
+		}
+		else
+		{
+			return FHitResult();
+		}
 	}	
 	else
 	{
