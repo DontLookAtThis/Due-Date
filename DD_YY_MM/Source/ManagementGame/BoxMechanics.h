@@ -7,6 +7,8 @@
 #include "BoxMechanics.generated.h"
 
 class UStaticMeshComponent;
+class UBoxComponent;
+//class UDestructibleCompoenent;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MANAGEMENTGAME_API UBoxMechanics : public UActorComponent
 {
@@ -21,6 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 	bool bStartup;
 	UStaticMeshComponent* m_pMyMesh;
+	UBoxComponent* m_pMyBoxCollider;
+	//UDestructibleCompoenent* m_pMyDesMesh;
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -31,6 +35,10 @@ public:
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	UPROPERTY(EditAnywhere)
 		int iHealth = 1;
+	UPROPERTY(EditAnywhere)
+		int iBoxType;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AActor> DestrucitbleBox;
 	int deathTimer;
 	void BreakItem();
 };

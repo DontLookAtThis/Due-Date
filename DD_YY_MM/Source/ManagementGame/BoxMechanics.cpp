@@ -12,11 +12,13 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
+#include <string>
+#include "Components/BoxComponent.h"
 
 // Sets default values for this component's properties
 UBoxMechanics::UBoxMechanics()
 {
-	deathTimer = 150;
+	deathTimer = 160;
 	bStartup = true;
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -24,6 +26,27 @@ UBoxMechanics::UBoxMechanics()
 	//GetOwner()->FindComponentByClass<UStaticMeshComponent>()->OnComponentBeginOverlap.AddDynamic(this, &UBoxMechanics::OnConveyor);
 	bOnConvey = false;
 	bPickedUp = false;
+	//if (iBoxType == 1)
+	//{
+	//	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Parcel_Assets/Small_Box/DestrucibleFragileBox.DestrucibleFragileBox'"));
+	//	if (ItemBlueprint.Object) {
+	//		DestrucitbleBox = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	//	}
+	//}
+	//else if(iBoxType == 2)
+	//{
+	//	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Parcel_Assets/NormalParcel/3rdBoxDestructible.3rdBoxDestructible'"));
+	//	if (ItemBlueprint.Object) {
+	//		DestrucitbleBox = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	//	}
+	//}
+	//else if(iBoxType == 3)
+	//{
+	//	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Parcel_Assets/Crate/CrateDestructible.CrateDestructible'"));
+	//	if (ItemBlueprint.Object) {
+	//		DestrucitbleBox = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	//	}
+	//}
 }
 
 
@@ -32,7 +55,7 @@ void UBoxMechanics::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
-
+	//m_pMyBoxCollider = GetOwner()->FindComponentByClass<UBoxComponent>();
 	m_pMyMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
 	m_pMyMesh->bGenerateOverlapEvents = true;
 	m_pMyMesh->OnComponentBeginOverlap.AddDynamic(this, &UBoxMechanics::OnOverlapBegin);
@@ -43,20 +66,33 @@ void UBoxMechanics::BeginPlay()
 // Called every frame
 void UBoxMechanics::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	
-
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (bOnConvey && !bPickedUp)
 	{
 		FVector loca = GetOwner()->GetActorLocation();
 		FVector Movement(-100000.0f, 0.0f, 0.0f);
 		//loca = loca + Movement;
-		loca.X += 1.0f;
+		loca.X += 2.0f;
 		GetOwner()->SetActorLocation(loca);
 		//m_pMyMesh->AddForce(Movement);
 	}
 	BreakItem();
-	// ...
+	//if (bOnConvey)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolOncConvey: True"));
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolOncConvey: False"));
+	//}
+	//if (bPickedUp)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolPickedUP : True"));
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("boolPickedUP : False"));
+	//}
 }
 
 void UBoxMechanics::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
@@ -81,6 +117,14 @@ void UBoxMechanics::BreakItem()
 	}
 	if (deathTimer <= 0)
 	{
+		FActorSpawnParameters params;
+		params.Owner = GetOwner();
+
+		FRotator rotation = GetOwner()->GetActorRotation();
+		FVector location = GetOwner()->GetActorLocation();
+
+
+		GetWorld()->SpawnActor<AActor>(DestrucitbleBox, location, rotation);
 		GetOwner()->Destroy();
 	}
 }

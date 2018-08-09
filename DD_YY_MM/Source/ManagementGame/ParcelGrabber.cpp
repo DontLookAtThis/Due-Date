@@ -93,7 +93,7 @@ void UParcelGrabber::OnSetYeetPressed()
 			FVector YEET = m_PlayerCharacter->GetActorForwardVector();
 			YEET.Z += 0.5f;
 			GrabbedComp->AddImpulse(YEET * 1500.0f, NAME_None, true);
-
+			GrabbedComp->GetOwner()->FindComponentByClass<UBoxMechanics>()->bPickedUp = false;
 		}
 	}
 }
