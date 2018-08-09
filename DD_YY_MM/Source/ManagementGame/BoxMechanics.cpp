@@ -16,7 +16,7 @@
 // Sets default values for this component's properties
 UBoxMechanics::UBoxMechanics()
 {
-	deathTimer = 150;
+	deathTimer = 85;
 	bStartup = true;
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -43,15 +43,13 @@ void UBoxMechanics::BeginPlay()
 // Called every frame
 void UBoxMechanics::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	
-
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (bOnConvey && !bPickedUp)
 	{
 		FVector loca = GetOwner()->GetActorLocation();
 		FVector Movement(-100000.0f, 0.0f, 0.0f);
 		//loca = loca + Movement;
-		loca.X += 1.0f;
+		loca.X += 2.0f;
 		GetOwner()->SetActorLocation(loca);
 		//m_pMyMesh->AddForce(Movement);
 	}
