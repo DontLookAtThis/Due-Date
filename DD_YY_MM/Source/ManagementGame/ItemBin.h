@@ -53,7 +53,6 @@ private:
 	// enum variable to contain the type of Bin this is
 	UPROPERTY(EditAnywhere, Category=Enum)
 	EBinType TypeOfBin;
-
 	// Array to contain the instances of the blueprint found in the scene
 	TArray<AActor*> FoundActors;	
 

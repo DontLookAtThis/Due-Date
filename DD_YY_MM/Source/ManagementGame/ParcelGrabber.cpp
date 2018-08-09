@@ -67,6 +67,7 @@ void UParcelGrabber::OnSetYeetPressed()
 	UPrimitiveComponent* thrownitem = m_PhysicsHandle->GrabbedComponent;
 	if (bThrown == false && thrownitem && bGrabbing == false)
 	{
+		thrownitem->GetOwner()->FindComponentByClass<UBoxMechanics>()->iHealth--;
 		bThrown = true;
 		if (m_PhysicsHandle->GrabbedComponent != nullptr)
 		{
