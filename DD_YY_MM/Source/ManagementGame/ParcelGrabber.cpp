@@ -214,7 +214,6 @@ FHitResult UParcelGrabber::GetFirstPhysicsBodyInReach()
 		FCollisionQueryParams()			
 	);	
 
-	// See what we hit
 	AActor* ActorHit = LineTraceHit.GetActor();
 	if (ActorHit)
 	{
