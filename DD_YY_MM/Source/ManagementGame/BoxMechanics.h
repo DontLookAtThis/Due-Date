@@ -33,12 +33,13 @@ public:
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	UPROPERTY(EditAnywhere)
-		int iHealth = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+		int32 iHealth = 1;
 	UPROPERTY(EditAnywhere)
 		int iBoxType;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> DestrucitbleBox;
 	int deathTimer;
+	UFUNCTION(BlueprintCallable, Category = "Break")
 	void BreakItem();
 };

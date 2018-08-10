@@ -18,7 +18,7 @@
 // Sets default values for this component's properties
 UBoxMechanics::UBoxMechanics()
 {
-	deathTimer = 160;
+	deathTimer = 60;
 	bStartup = true;
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -76,7 +76,7 @@ void UBoxMechanics::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		GetOwner()->SetActorLocation(loca);
 		//m_pMyMesh->AddForce(Movement);
 	}
-	BreakItem();
+	//BreakItem();
 	//if (bOnConvey)
 	//{
 	//	UE_LOG(LogTemp, Error, TEXT("boolOncConvey: True"));
@@ -111,12 +111,12 @@ void UBoxMechanics::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, clas
 
 void UBoxMechanics::BreakItem()
 {
-	if (iHealth <= 0)
-	{
-		deathTimer--;
-	}
-	if (deathTimer <= 0)
-	{
+	//if (iHealth <= 0)
+	//{
+	//	deathTimer--;
+	//}
+	//if (deathTimer <= 0)
+	//{
 		FActorSpawnParameters params;
 		params.Owner = GetOwner();
 
@@ -126,7 +126,7 @@ void UBoxMechanics::BreakItem()
 
 		GetWorld()->SpawnActor<AActor>(DestrucitbleBox, location, rotation);
 		GetOwner()->Destroy();
-	}
+	//}
 }
 
 
